@@ -1,0 +1,146 @@
+Project Artisans {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Artisans Database
+  '''
+}
+
+Table users {
+    uuid string [pk]
+    first_name varchar
+    last_name  varchar
+    phone varchar
+    email varchar
+    email_verified boolean [default:false]
+    phone_verified boolean [default:false]
+    account_type users.account_type [default: 'user']
+    avatar text
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at "timestamp default NULL" [null]
+}
+
+Table users_profile{
+    uuid string [pk]
+    user_id int [not null]
+    activities_subscribed "users_profile.activities_subscribed[]" // an array of enums
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+Table business {
+    uuid string [pk]
+    user_id string
+    category_id string
+    name varchar
+    avater varchar
+    verified boolean [default:false]
+    tag varchar [null]
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+Table business_categories {
+    uuid string [pk]
+    name varchar [unique, not null]
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+  
+}
+
+Table service_requests {
+    uuid string [pk]
+    business_id string
+    user_id string
+    status service_requests.status
+    title varchar(1000)
+    description text [null]
+    is_scheduled_request boolean [default: false]
+    scheduled_service_request_id int [null]
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+
+Table scheduled_service_request {
+    uuid string [pk]
+    title string
+    every scheduled_service_request.every
+    count int
+    start_date timestamp
+    business_id int [not null]
+    user_id int [not null]
+    active boolean
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+Table service_feedback {
+    uuid string [pk]
+    service_request_id string [not null]
+    rating integer [not null]
+    review text
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+
+Table activity_log {
+    uuid string [pk]
+    user_id integer
+    is_read boolean [default: false]
+    type activity_log.type
+    activity_id int
+    created_at "timestamp default CURRENT_TIMESTAMP" [not null]
+    updated_at "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" [not null]
+    deleted_at  "timestamp default NULL" [null]
+}
+
+Ref: users_profile.user_id - users.uuid
+Ref: business.user_id - users.uuid
+Ref: business.category_id > business_categories.uuid
+Ref: service_requests.user_id > users.uuid
+Ref: service_requests.business_id > business.uuid
+Ref: service_feedback.service_request_id > service_requests.uuid
+Ref: activity_log.user_id > users.uuid
+Ref: service_requests.scheduled_service_request_id > scheduled_service_request.uuid
+
+Enum users.account_type{
+  admin
+  business
+  user
+}
+
+Enum service_requests.status {
+  accepted
+  Done
+  Canceled
+  Pending
+  Booked
+}
+
+Enum users_profile.activities_subscribed {
+  email
+  chat
+  service_requests
+}
+
+Enum activity_log.type{
+  chat
+  service_requests_accepted
+  service_requests_declined
+  service_request_completed
+  service_request_scheduled
+}
+
+Enum scheduled_service_request.every {
+  Day
+  Week
+  Month
+}

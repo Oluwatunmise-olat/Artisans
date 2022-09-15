@@ -16,6 +16,8 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', () => {
+    console.log(process.env.POSTGRES_DB_USER, 'Postgres User');
+
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
