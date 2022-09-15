@@ -15,6 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
+    console.log(process.env.POSTGRES_DB_USER, 'Postgres User', process.env);
+
     it('should return "Hello World!"', () => {
       expect(appController.getHello()).toBe('Hello World!');
     });
