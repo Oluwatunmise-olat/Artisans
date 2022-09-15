@@ -11,8 +11,8 @@ Table users {
     last_name  varchar
     phone varchar
     email varchar
-    email_verified boolean [default:false]
-    phone_verified boolean [default:false]
+    is_email_verified boolean [default:false]
+    is_phone_verified boolean [default:false]
     account_type users.account_type [default: 'user']
     avatar text
     created_at "timestamp default CURRENT_TIMESTAMP" [not null]
