@@ -3,6 +3,9 @@
 -- Implement adavance business users account for better discoverability, chats integration
 -- Location (record users location on login and action performed)
 
+-- uuid generation extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE SCHEMA "users";
 
 CREATE SCHEMA "service_requests";
@@ -48,7 +51,7 @@ CREATE TYPE "scheduled_service_request"."every" AS ENUM (
 );
 
 CREATE TABLE "users" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "first_name" varchar,
   "last_name" varchar,
   "phone" varchar,
@@ -57,43 +60,43 @@ CREATE TABLE "users" (
   "is_phone_verified" boolean DEFAULT false,
   "account_type" users.account_type DEFAULT 'user',
   "avatar" text,
-  "created_at"  TIMESTAMPTZ NOT NULL,
-  "updated_at"  TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at"  TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "users_profile" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "user_id" uuid NOT NULL,
   "activities_subscribed" users_profile.activities_subscribed array NOT NULL,
-  "created_at"  TIMESTAMPTZ NOT NULL,
-  "updated_at"  TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at"  TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "business" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "user_id" uuid,
   "category_id" uuid,
   "name" varchar,
   "avater" varchar,
   "is_verified" boolean DEFAULT false,
   "tag" varchar,
-  "created_at" TIMESTAMPTZ NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "business_categories" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" varchar UNIQUE NOT NULL,
-  "created_at" TIMESTAMPTZ NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "service_requests" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "business_id" uuid,
   "user_id" uuid,
   "status" service_requests.status,
@@ -101,13 +104,13 @@ CREATE TABLE "service_requests" (
   "description" text,
   "is_scheduled_request" boolean DEFAULT false,
   "scheduled_service_request_id" uuid,
-  "created_at"  TIMESTAMPTZ NOT NULL,
-  "updated_at"  TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at"  TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "scheduled_service_request" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "title" varchar,
   "every" scheduled_service_request.every,
   "count" integer NOT NULL, -- // every 7 days, 2 weeks, 4 months etc
@@ -115,29 +118,29 @@ CREATE TABLE "scheduled_service_request" (
   "business_id" uuid NOT NULL,
   "user_id" uuid NOT NULL,
   "active" boolean,
-  "created_at" TIMESTAMPTZ NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "service_feedback" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "service_request_id" uuid NOT NULL,
   "rating" integer NOT NULL,
   "review" text,
-  "created_at" TIMESTAMPTZ NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ NULL
 );
 
 CREATE TABLE "activity_log" (
-  "uuid" uuid PRIMARY KEY,
+  "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "user_id" uuid NOT NULL,
   "is_read" boolean DEFAULT false,
   "type" activity_log.type,
   "activity_id" uuid,
-  "created_at" TIMESTAMPTZ NOT NULL,
-  "updated_at" TIMESTAMPTZ NOT NULL,
+  "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updated_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),
   "deleted_at" TIMESTAMPTZ NULL
 );
 

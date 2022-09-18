@@ -6,15 +6,15 @@ import {
 } from 'typeorm';
 
 export class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', { name: 'uuid' })
   uuid: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp with time zone', name: 'created_at' })
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp with time zone', name: 'updated_at' })
   updated_at: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
   deleted_at: Date;
 }

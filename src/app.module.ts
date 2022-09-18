@@ -4,6 +4,8 @@ import { AccountsModule } from './accounts/accounts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import EnvValidationSchema from '../env';
+import { UtilsModule } from './utils/utils.module';
+import { CustomValidatorsModule } from './custom-validators/validators.module';
 
 @Module({
   imports: [
@@ -14,19 +16,28 @@ import EnvValidationSchema from '../env';
       validationOptions: { allowUnknown: true, abortEarly: false },
     }),
     AccountsModule,
+    UtilsModule,
+    CustomValidatorsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('POSTGRES_DB_HOST'),
-        port: Number(configService.get('POSTGRES_DB_PORT')),
-        username: configService.get('POSTGRES_DB_USER'),
-        password: configService.get('POSTGRES_DB_PASSWORD'),
-        database: configService.get('POSTGRES_DB_NAME'),
-        entities: [__dirname + './database/entities/*.entity.{ts,js'],
-        synchronize: false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: configService.get('POSTGRES_DB_HOST'),
+          port: Number(configService.get('POSTGRES_DB_PORT')),
+          username: configService.get('POSTGRES_DB_USER'),
+          password: configService.get('POSTGRES_DB_PASSWORD'),
+          database: configService.get('POSTGRES_DB_NAME'),
+          autoLoadEntities: true,
+          synchronize: false,
+          metadataTableName: 'migrations',
+          migrations: [__dirname + '/../src/database/migrations/*{.ts,.js}'],
+          cli: {
+            migrationsDir: __dirname + '/../src/database/migrations',
+          },
+        };
+      },
     }),
   ],
   controllers: [],
