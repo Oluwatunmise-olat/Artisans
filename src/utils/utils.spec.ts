@@ -1,7 +1,8 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { IAPIResponse, UsersAccountTypeEnum } from 'src/typings';
+
 import { Hash } from './hash.utils';
+import { IAPIResponse, UsersAccountTypeEnum } from '../typings/index';
 import { JwtService } from './jwt.utils';
 import { APIResponse } from './responses.utils';
 
