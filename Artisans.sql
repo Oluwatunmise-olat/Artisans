@@ -113,7 +113,7 @@ CREATE TABLE "scheduled_service_request" (
   "uuid" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   "title" varchar,
   "every" scheduled_service_request.every,
-  "count" integer NOT NULL, -- // every 7 days, 2 weeks, 4 months etc
+  "reoccurs" integer NOT NULL, -- // every 7 days, 2 weeks, 4 months etc
   "start_date" TIMESTAMPTZ,
   "business_id" uuid NOT NULL,
   "user_id" uuid NOT NULL,

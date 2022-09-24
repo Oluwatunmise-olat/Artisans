@@ -30,29 +30,11 @@ jobs:
         uses: actions/setup-node@v3.4.1
         with:
           node-version: '16.x'
-          cache: 'yarn' # Cache dependencies to reduce ci time
-      - name: Install project dependencies
-        run: yarn install --frozen-lockfile # install versions in yarn.lock file and prevent update to yarn.lock file
-      - name: Run Tests
-        env:
-          POSTGRES_DB_USER: $POSTGRES_USER
-          POSTGRES_DB_NAME: $POSTGRES_DB
-          POSTGRES_DB_PASSWORD: $POSTGRES_PASSWORD
-        run: yarn run test
-
-  lint:
-    runs-on: ubuntu-latest
-    needs: ['test']
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-      - name: Setup and Install Node.Js
-        uses: actions/setup-node@v3.4.1
-        with:
-          node-version: '16.x'
           cache: 'yarn'
       - name: Install project dependencies
         run: yarn install --frozen-lockfile
+      - name: Run Tests
+        run: yarn run test
       - name: Lint Code
         run: yarn run lint
 

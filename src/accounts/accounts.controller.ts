@@ -28,11 +28,32 @@ export class AccountsController {
   async signIn(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() _payload: AccountLoginDto,
+    @Body() payload: AccountLoginDto,
   ) {
     const { message, data, statusCode } = await this.accountService.login(
       req.user,
     );
+
+    return res.status(statusCode).send(this.apiResponse.success(message, data));
+  }
+
+  @Post('business')
+  async createBusinessAccount(@Body() payload: any, @Res() response: Response) {
+    const {} = await this.accountService;
+  }
+
+  @Post('business/login')
+  @UseGuards(AuthGuard('basic'))
+  async signInAsBusiness(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() payload: AccountLoginDto,
+  ) {
+    const { message, data, statusCode } = await this.accountService.login(
+      req.user,
+      UsersAccountTypeEnum.BUSINESS,
+    );
+
     return res.status(statusCode).send(this.apiResponse.success(message, data));
   }
 

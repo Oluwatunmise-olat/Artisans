@@ -44,10 +44,11 @@ export class AccountsService {
     }
   }
 
-  async login(user: Users) {
+  async login(user: Users, type = UsersAccountTypeEnum.USER) {
     const token = await this.jwtService.generateAccessToken({
       email: user.email,
       uuid: user.uuid,
+      type,
     });
 
     return {
@@ -55,6 +56,19 @@ export class AccountsService {
       message: 'User login success',
       data: { token },
     };
+  }
+
+  async createBusinessAccount({ payload }: { payload: any }) {
+    // create a transaction
+    const userAccountPayload: AccountSignUpDto = {
+      first_name: '',
+      last_name: '',
+      email: 'email',
+      phone: 'p',
+      password: '',
+    };
+
+    const businessAccountPayload = {};
   }
 
   async validateUser(usernameField: string, passwordField: string) {

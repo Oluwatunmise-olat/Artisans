@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import EnvValidationSchema from '../env';
 import { UtilsModule } from './utils/utils.module';
 import { CustomValidatorsModule } from './custom-validators/validators.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CustomValidatorsModule } from './custom-validators/validators.module';
         };
       },
     }),
+    CoreModule,
   ],
   controllers: [],
   providers: [],
