@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { IAPIResponse } from 'src/typings';
+import { IAPIResponse, UsersAccountTypeEnum } from 'src/typings';
 import { Hash } from './hash.utils';
 import { JwtService } from './jwt.utils';
 import { APIResponse } from './responses.utils';
@@ -83,6 +83,7 @@ describe('Utility Module', () => {
       const token = await jwtProvider.generateAccessToken({
         email: 'test@outlook.com',
         uuid: '089h-ugbuiuh',
+        type: UsersAccountTypeEnum.USER,
       });
 
       expect(token).toBeDefined();
