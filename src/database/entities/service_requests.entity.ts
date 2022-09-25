@@ -1,6 +1,9 @@
 import { ServiceRequestStatusEnum } from 'src/typings';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
+import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
+import { ServiceFeedback } from './service_feedback.entity';
+import { Users } from './users.entity';
 
 @Entity({ name: 'service_requests' })
 export class ServiceRequest extends BaseEntity {
@@ -33,4 +36,14 @@ export class ServiceRequest extends BaseEntity {
 
   @Column({ type: 'uuid', name: 'business_id', nullable: false })
   business_id: string;
+
+  @ManyToOne(() => Business, (business) => business.uuid)
+  @JoinColumn({ name: 'business_id', referencedColumnName: 'uuid' })
+  business: Business;
+
+  @ManyToOne(() => Users, (user) => user.uuid)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'uuid' })
+  user: Users;
+
+  feedbacks: ServiceFeedback[];
 }

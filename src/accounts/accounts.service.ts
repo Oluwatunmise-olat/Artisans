@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UsersAccountTypeEnum } from 'src/typings';
 import { AccountSignUpDto } from './dto/accounts.dto';
-import { Users } from '../database/entities';
+import { Users, UsersProfile } from '../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Hash, JwtService } from '../utils';

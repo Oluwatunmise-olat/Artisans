@@ -1,6 +1,8 @@
 import { Max, Min } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
+import { ServiceRequest } from './service_requests.entity';
 
 @Entity({ name: 'service_feedback' })
 export class ServiceFeedback extends BaseEntity {
@@ -14,4 +16,8 @@ export class ServiceFeedback extends BaseEntity {
 
   @Column({ type: 'uuid', nullable: false, name: 'service_request_id' })
   service_request_id: string;
+
+  @OneToOne(() => ServiceRequest, (serviceReq) => serviceReq.uuid)
+  @JoinColumn({ name: 'service_request_id', referencedColumnName: 'uuid' })
+  service_request: ServiceRequest;
 }

@@ -1,6 +1,8 @@
 import { ScheduledServicePeriodicRequestEnum } from 'src/typings';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
+import { Users } from './users.entity';
 
 @Entity({ name: 'scheduled_service_request' })
 export class ScheduledServiceRequest extends BaseEntity {
@@ -33,4 +35,12 @@ export class ScheduledServiceRequest extends BaseEntity {
 
   @Column({ name: 'user_id', type: 'uuid', nullable: false })
   user_id: string;
+
+  @ManyToOne(() => Business, (business) => business.uuid)
+  @JoinColumn({ name: 'business_id', referencedColumnName: 'uuid' })
+  business: Business;
+
+  @ManyToOne(() => Users, (user) => user.uuid)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'uuid' })
+  user: Users;
 }
