@@ -5,6 +5,7 @@ import * as passport from 'passport';
 
 import { JWT_AUTH_TOKEN } from './constants';
 import { AccountsService } from '../accounts.service';
+import { AuthGuard } from '../guards';
 
 @Injectable()
 export class JWTAuthStrategy extends Strategy {

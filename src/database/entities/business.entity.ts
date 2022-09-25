@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+
 import { BusinessCategory } from './business_categories.entity';
 import { BaseEntity } from './entity.base';
 import { Users } from './users.entity';
@@ -8,10 +9,10 @@ export class Business extends BaseEntity {
   @Column({ name: 'name', type: 'varchar', nullable: false })
   name: string;
 
-  @Column({ nullable: true, type: 'varchar', length: 1000 })
+  @Column({ nullable: true, type: 'varchar', length: 1000, default: null })
   avatar?: string;
 
-  @Column({ type: 'tinyint', name: 'is_verified', default: false })
+  @Column({ type: 'boolean', name: 'is_verified', default: false })
   is_verified: boolean;
 
   @Column({ comment: 'Business catch phrase', name: 'tag', type: 'text' })
@@ -20,7 +21,7 @@ export class Business extends BaseEntity {
   @Column({ name: 'user_id', type: 'uuid', nullable: false })
   user_id: string;
 
-  @Column({ name: 'user_id', type: 'uuid', nullable: false })
+  @Column({ name: 'category_id', type: 'uuid', nullable: false })
   category_id: string;
 
   @OneToOne(() => Users, (user) => user.uuid)

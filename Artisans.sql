@@ -79,7 +79,7 @@ CREATE TABLE "business" (
   "user_id" uuid,
   "category_id" uuid,
   "name" varchar,
-  "avater" varchar,
+  "avatar" varchar,
   "is_verified" boolean DEFAULT false,
   "tag" varchar,
   "created_at"  TIMESTAMPTZ NOT NULL DEFAULT now(),

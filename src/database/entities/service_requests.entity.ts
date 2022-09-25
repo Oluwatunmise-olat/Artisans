@@ -1,5 +1,6 @@
-import { ServiceRequestStatusEnum } from 'src/typings';
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
+
+import { ServiceRequestStatusEnum } from '../../typings';
 import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
 import { ServiceFeedback } from './service_feedback.entity';
@@ -21,7 +22,7 @@ export class ServiceRequest extends BaseEntity {
   @Column({ name: 'description', type: 'text', nullable: false })
   description: string;
 
-  @Column({ type: 'tinyint', name: 'is_scheduled_request', nullable: false })
+  @Column({ type: 'boolean', name: 'is_scheduled_request', nullable: false })
   is_scheduled_request: boolean;
 
   @Column({

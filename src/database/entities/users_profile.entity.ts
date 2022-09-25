@@ -1,5 +1,6 @@
-import { ActivitySubscriptionEnum } from 'src/typings';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+
+import { ActivitySubscriptionEnum } from '../../typings';
 import { BaseEntity } from './entity.base';
 import { Users } from './users.entity';
 @Entity({ name: 'users_profile' })
@@ -9,6 +10,7 @@ export class UsersProfile extends BaseEntity {
     enumName: 'users_profile.activities_subscribed',
     enum: Object.values(ActivitySubscriptionEnum),
     type: 'enum',
+    array: true,
     nullable: false,
   })
   activities_subscribed: Array<ActivitySubscriptionEnum>;

@@ -1,4 +1,14 @@
-import { IsEmail, IsNotEmpty, IsString, Validate } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
+
+import { ActivitySubscriptionEnum } from 'src/typings';
 import { IsUserExistsWithEmail } from '../../custom-validators/providers';
 
 export class AccountSignUpDto {
@@ -19,7 +29,6 @@ export class AccountSignUpDto {
   @IsString({})
   phone: string;
 
-  // perform phone transformation
   @IsNotEmpty({})
   @IsString({})
   password: string;
@@ -33,6 +42,23 @@ export class AccountLoginDto {
   @IsNotEmpty({})
   @IsString({})
   password: string;
+}
+
+export class UpdateUserProfileDto {
+  @IsEnum(ActivitySubscriptionEnum, { each: true })
+  @ArrayNotEmpty()
+  @IsOptional()
+  activities_subscribed_to: ActivitySubscriptionEnum[];
+
+  @IsOptional()
+  @IsNotEmpty({})
+  @IsString({})
+  first_name: string;
+
+  @IsOptional()
+  @IsNotEmpty({})
+  @IsString({})
+  last_name: string;
 }
 
 export class AccountVerificationDto {}

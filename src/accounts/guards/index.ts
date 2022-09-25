@@ -1,5 +1,7 @@
 import {
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   mixin,
   UnauthorizedException,
@@ -8,6 +10,8 @@ import * as passport from 'passport';
 import { Request, Response } from 'express';
 
 import { BASIC_AUTH_TOKEN, JWT_AUTH_TOKEN } from '../providers/constants';
+import { validateDto } from 'src/custom-validators/providers';
+import { AccountLoginDto } from '../dto/accounts.dto';
 
 export const AuthGuard = (guardType: 'basic' | 'jwt') => {
   const strategyToken =
@@ -17,15 +21,25 @@ export const AuthGuard = (guardType: 'basic' | 'jwt') => {
   class PassportAuthGuards {
     async canActivate(context: ExecutionContext) {
       const ctx = context.switchToHttp();
-
       const request = ctx.getRequest<Request>();
       const response = ctx.getResponse<Response>();
 
-      const user = await this.authStatus(request, response, strategyToken);
+      if (guardType === 'basic') {
+        await this.validateBody(request.body);
+      }
 
+      const user = await this.authStatus(request, response, strategyToken);
       request.user = user;
 
       return true;
+    }
+
+    async validateBody(data: any) {
+      const { status, message } = await validateDto(AccountLoginDto, data);
+
+      if (!status) {
+        throw new HttpException({ message }, HttpStatus.BAD_REQUEST);
+      }
     }
 
     async authStatus(

@@ -31,7 +31,7 @@ export enum ServiceRequestStatusEnum {
 export enum ActivitySubscriptionEnum {
   EMAIL = 'email',
   CHAT = 'chat',
-  SERVICE_REQUESTS = 'service_request',
+  SERVICE_REQUESTS = 'service_requests',
 }
 
 // Response Typings

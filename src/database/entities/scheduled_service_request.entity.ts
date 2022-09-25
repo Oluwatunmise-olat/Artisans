@@ -1,5 +1,6 @@
-import { ScheduledServicePeriodicRequestEnum } from 'src/typings';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+
+import { ScheduledServicePeriodicRequestEnum } from '../../typings';
 import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
 import { Users } from './users.entity';
@@ -20,7 +21,7 @@ export class ScheduledServiceRequest extends BaseEntity {
   @Column({ name: 'reoccurs', nullable: false, type: 'integer' })
   reoccurs: number;
 
-  @Column({ type: 'tinyint', nullable: false, name: 'active' })
+  @Column({ type: 'boolean', nullable: false, name: 'active' })
   active: boolean;
 
   @Column({

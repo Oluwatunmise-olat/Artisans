@@ -1,5 +1,6 @@
 import { Max, Min } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+
 import { Business } from './business.entity';
 import { BaseEntity } from './entity.base';
 import { ServiceRequest } from './service_requests.entity';

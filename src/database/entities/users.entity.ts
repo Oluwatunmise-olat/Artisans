@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 
-import { UsersAccountTypeEnum } from 'src/typings';
+import { UsersAccountTypeEnum } from '../../typings';
 import { BaseEntity } from './entity.base';
+import { UsersProfile } from './users_profile.entity';
 
 @Entity({ name: 'users' })
 export class Users extends BaseEntity {
@@ -36,4 +37,7 @@ export class Users extends BaseEntity {
 
   @Column({ name: 'password', nullable: false })
   password: string;
+
+  @OneToOne(() => UsersProfile, (userProfile) => userProfile.user)
+  profile: UsersProfile;
 }

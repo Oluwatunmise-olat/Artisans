@@ -1,10 +1,11 @@
-import { ActivityLogEnum } from 'src/typings';
 import { Column, Entity } from 'typeorm';
+
+import { ActivityLogEnum } from '../../typings';
 import { BaseEntity } from './entity.base';
 
 @Entity({ name: 'activity_log' })
 export class ActivityLogs extends BaseEntity {
-  @Column({ type: 'tinyint', default: false, name: 'type' })
+  @Column({ type: 'boolean', default: false, name: 'type' })
   is_read: boolean;
 
   @Column({
