@@ -24,10 +24,10 @@ CREATE TYPE "users"."account_type" AS ENUM (
 
 CREATE TYPE "service_requests"."status" AS ENUM (
   'accepted',
-  'Done',
-  'Canceled',
-  'Pending',
-  'Booked'
+  'done',
+  'canceled',
+  'pending',
+  'booked'
 );
 
 CREATE TYPE "users_profile"."activities_subscribed" AS ENUM (
@@ -45,9 +45,9 @@ CREATE TYPE "activity_log"."type" AS ENUM (
 );
 
 CREATE TYPE "scheduled_service_request"."every" AS ENUM (
-  'Day',
-  'Week',
-  'Month'
+  'day',
+  'week',
+  'month'
 );
 
 CREATE TABLE "users" (

@@ -7,6 +7,8 @@ import EnvValidationSchema from '../env';
 import { UtilsModule } from './utils/utils.module';
 import { CustomValidatorsModule } from './custom-validators/validators.module';
 import { CoreModule } from './core/core.module';
+import { ClientModule } from './client/client.module';
+import { ArtisansModule } from './artisans/artisans.module';
 
 @Module({
   imports: [
@@ -41,6 +43,9 @@ import { CoreModule } from './core/core.module';
       },
     }),
     CoreModule,
+    ConfigModule,
+    ClientModule,
+    ArtisansModule,
   ],
   controllers: [],
   providers: [],

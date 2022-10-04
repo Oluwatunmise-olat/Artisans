@@ -26,14 +26,19 @@ export class AccountsService {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+
     @InjectRepository(UsersProfile)
     private readonly usersProfileRepository: Repository<UsersProfile>,
+
     @InjectRepository(BusinessCategory)
     private readonly businessCategoryRepository: Repository<BusinessCategory>,
+
     @InjectEntityManager()
     private readonly entityManager: EntityManager,
+
     @InjectRepository(Business)
     private readonly businessService: Repository<Business>,
+
     private readonly hashService: Hash,
     private readonly jwtService: JwtService,
   ) {}
@@ -75,8 +80,6 @@ export class AccountsService {
       };
     } catch (error) {
       // custom http exception and logging
-      console.log(error);
-
       throw new InternalServerErrorException();
     }
   }
