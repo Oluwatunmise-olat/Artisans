@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+
 import { UsersAccountTypeEnum } from 'src/typings';
 
-// can be switched to use nestjs reflection and meatdata
+// can be switched to use nestjs reflection and metadata
 
 @Injectable()
 export class UserTypeGuard implements CanActivate {
