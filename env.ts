@@ -8,4 +8,10 @@ export default Joi.object({
   POSTGRES_DB_PASSWORD: Joi.string().required(),
   POSTGRES_DB_PORT: Joi.string().required(),
   POSTGRES_DB_HOST: Joi.string().required(),
+
+  RABBIT_MQ_USERNAME: Joi.string().required(),
+  RABBIT_MQ_PASSWORD: Joi.string().required(),
+  RABBIT_MQ_HOST: Joi.string().required(),
+  RABBIT_MQ_PORT: Joi.number().required(),
+  RABBIT_MQ_PROTOCOL: Joi.string().required().default('amqp'),
 });
