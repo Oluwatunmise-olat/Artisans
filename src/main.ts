@@ -11,6 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   useContainer(app.select(CustomValidatorsModule), { fallbackOnErrors: true }); // allows for dependency injection in class-validator
+  app.enableShutdownHooks();
   await app.listen(3000);
 }
 bootstrap();

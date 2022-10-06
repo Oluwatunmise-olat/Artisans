@@ -8,6 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Request, Response } from 'express';
 
 import { AuthGuard } from 'src/accounts/guards';
@@ -25,7 +26,13 @@ export class ClientController {
   constructor(
     private readonly clientService: ClientService,
     private apiResponse: APIResponse,
+    private eventEmitter: EventEmitter2,
   ) {}
+
+  @OnEvent('email.user_created')
+  handleUserCreatedEvent(payload: any) {
+    console.log(payload.content, '>>>>>');
+  }
 
   @Post('services')
   @UseGuards(AuthGuard('jwt'), new UserTypeGuard(UsersAccountTypeEnum.USER))

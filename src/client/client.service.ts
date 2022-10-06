@@ -15,6 +15,7 @@ import {
   CreateServiceRequestDto,
   CreateServiceRequestFeedbackDto,
 } from './dto/index.dto';
+import { RabbitMQService } from 'src/utils/rabbit.utils';
 
 @Injectable()
 export class ClientService {
@@ -33,6 +34,8 @@ export class ClientService {
 
     @InjectRepository(ServiceFeedback)
     private readonly serviceReqFeedbackRepository: Repository<ServiceFeedback>,
+
+    private readonly rabbitMQ: RabbitMQService,
   ) {}
 
   async createServiceRequest(payload: CreateServiceRequestDto, user: Users) {
@@ -73,6 +76,10 @@ export class ClientService {
     await this.serviceReqRepository.save(serviceRequest);
 
     // Emit service requested event to -> business via websocket and save to activity_logs
+    this.rabbitMQ.publish(
+      { name: 'Oluwatunmise' },
+      'notification.service_request',
+    );
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Service request sent successfully',

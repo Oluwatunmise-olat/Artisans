@@ -109,7 +109,7 @@ export class ArtisansService {
       where: { deleted_at: null, user_id: user.uuid },
     });
 
-    const topArtisans = await await this.businessRepository
+    const topArtisans = await this.businessRepository
       .createQueryBuilder('business')
       .leftJoin(
         'service_requests',

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AccountsModule } from './accounts/accounts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import EnvValidationSchema from '../env';
+import { AccountsModule } from './accounts/accounts.module';
 import { UtilsModule } from './utils/utils.module';
 import { CustomValidatorsModule } from './custom-validators/validators.module';
 import { CoreModule } from './core/core.module';
@@ -46,6 +47,7 @@ import { ArtisansModule } from './artisans/artisans.module';
     ConfigModule,
     ClientModule,
     ArtisansModule,
+    EventEmitterModule.forRoot({ verboseMemoryLeak: true }),
   ],
   controllers: [],
   providers: [],
