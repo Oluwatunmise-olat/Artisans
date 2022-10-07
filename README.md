@@ -15,6 +15,10 @@
 1. Admin microservice using RPC for communication
 2. Project id serverless file uploads (later stuff)
 
-### [DB SCHEMA DOCS](https://dbdocs.io/oolat31/Artisans)
+#### [DB SCHEMA DOCS](https://dbdocs.io/oolat31/Artisans)
 
-### [Postman Docs](https://documenter.getpostman.com/view/16498899/2s83zcTmmm#f6e3ed65-5139-4b5e-8907-da7ab745d622)
+#### [Postman Docs](https://documenter.getpostman.com/view/16498899/2s83zcTmmm#f6e3ed65-5139-4b5e-8907-da7ab745d622)
+
+#### Questions ?
+
+- How would transactions work when using a shared database and a lock as been applied on the current accessed row by a separate service?

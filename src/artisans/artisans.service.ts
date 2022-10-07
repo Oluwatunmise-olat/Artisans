@@ -10,6 +10,9 @@ import {
 } from 'src/database/entities';
 import { ServiceRequestStatusEnum } from 'src/typings';
 import { ServiceRequestResponseDto } from './dto';
+import { RabbitMQService } from 'src/utils/rabbit.utils';
+import { EventTypes } from 'src/typings/events';
+import { ServiceRequested } from 'src/_schemas/artisans._schema';
 
 @Injectable()
 export class ArtisansService {
@@ -25,6 +28,8 @@ export class ArtisansService {
 
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+
+    private readonly rabbitService: RabbitMQService,
   ) {}
 
   async getArtisanProfile(artisanId: string) {
@@ -257,12 +262,19 @@ export class ArtisansService {
     });
 
     if (serviceReqExists) {
-      await this.serviceReqRepository.save({
+      const serviceReq = await this.serviceReqRepository.save({
         ...payload,
         uuid: serviceReqExists.uuid,
       });
 
-      // Emit events based on response
+      this.rabbitService.publish(
+        {
+          sourceId: user.uuid,
+          targetId: serviceReqExists.user_id,
+          payload: new ServiceRequested(serviceReq),
+        },
+        EventTypes.EVENT_SERVICE_REQUEST_RESPONSE_N,
+      );
     }
 
     return { statusCode: HttpStatus.OK, message: 'Service response sent' };

@@ -20,6 +20,12 @@ import {
   BusinessCreationDto,
   UpdateBusinessProfileDto,
 } from './dto/business.dto';
+import { RabbitMQService } from 'src/utils/rabbit.utils';
+import { EventTypes } from 'src/typings/events';
+import {
+  BusinessAccountCreated,
+  UserAccountCreated,
+} from 'src/_schemas/accounts._schema';
 
 @Injectable()
 export class AccountsService {
@@ -41,6 +47,7 @@ export class AccountsService {
 
     private readonly hashService: Hash,
     private readonly jwtService: JwtService,
+    private readonly rabbitService: RabbitMQService,
   ) {}
 
   async createUser(
@@ -64,14 +71,17 @@ export class AccountsService {
         return { data: { unSavedUser, unSavedUserProfile: userProfile } };
       }
 
-      const { uuid } = await this.usersRepository.save(unSavedUser);
+      const user = await this.usersRepository.save(unSavedUser);
 
       await this.usersProfileRepository.save({
-        user_id: uuid,
+        user_id: user.uuid,
         activities_subscribed: defaultProfileSubscribedEvents,
       });
 
-      // Emit user welcome email event
+      this.rabbitService.publish(
+        { sourceId: user.uuid, payload: new UserAccountCreated(user) },
+        EventTypes.EVENT_USER_CREATED_E,
+      );
 
       return {
         message: 'Account created',
@@ -144,6 +154,14 @@ export class AccountsService {
         businessAccountPayload.user_id = uuid;
         businessPayload = await trx.save(businessAccountPayload);
       });
+
+      this.rabbitService.publish(
+        {
+          sourceId: businessPayload.uuid,
+          payload: new BusinessAccountCreated(businessPayload),
+        },
+        EventTypes.EVENT_BUSINESS_CREATED_E,
+      );
 
       return {
         statusCode: HttpStatus.CREATED,

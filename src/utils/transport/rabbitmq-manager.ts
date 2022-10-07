@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as amqp from 'amqplib';
 
-import { Queues, RabbitMQConnectionConfig } from 'src/typings/events';
+import {
+  EventTypes,
+  Queues,
+  RabbitMQConnectionConfig,
+} from 'src/typings/events';
 
 @Injectable()
 export class RabbitMQManager {
@@ -13,6 +17,7 @@ export class RabbitMQManager {
   PREFETCH_COUNT = 1;
   EXCHANGE = 'artisans.main_exchange';
   EXCHANGE_TYPE = 'topic';
+  MESSAGE_TTL_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30 * 4; // 4 months
 
   constructor(
     private readonly connectionOptions: RabbitMQConnectionConfig,
@@ -37,6 +42,12 @@ export class RabbitMQManager {
     await this.assert(Queues.NOTIFICATION_QUEUE, channel);
     await this.bindQueue(Queues.NOTIFICATION_QUEUE, channel);
 
+    await this.bindCustom(
+      [Queues.EMAIL_QUEUE, Queues.NOTIFICATION_QUEUE],
+      channel,
+      EventTypes.EVENT_SERVICE_REQUEST_A,
+    );
+
     return this.connection;
   }
 
@@ -59,7 +70,10 @@ export class RabbitMQManager {
   }
 
   async assertQueue(queueName: string, channel: amqp.Channel) {
-    await channel.assertQueue(queueName, { durable: false });
+    await channel.assertQueue(queueName, {
+      durable: false,
+      messageTtl: this.MESSAGE_TTL_IN_MILLISECONDS,
+    });
   }
 
   async assertExchange(exchangeName: string, channel: amqp.Channel) {
@@ -76,6 +90,16 @@ export class RabbitMQManager {
 
   private async bindQueue(queueName: Queues, channel: amqp.Channel) {
     await channel.bindQueue(queueName, this.EXCHANGE, `${queueName}.#`);
+  }
+
+  private async bindCustom(
+    queueName: Queues[],
+    channel: amqp.Channel,
+    bindingKey: string,
+  ) {
+    queueName.forEach(async (name) => {
+      await channel.bindQueue(name, this.EXCHANGE, bindingKey);
+    });
   }
 
   async publish(message: any, routingKey: string) {

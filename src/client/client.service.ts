@@ -10,12 +10,15 @@ import {
   ServiceRequest,
   Users,
 } from 'src/database/entities';
+
 import { ServiceRequestStatusEnum } from 'src/typings';
 import {
   CreateServiceRequestDto,
   CreateServiceRequestFeedbackDto,
 } from './dto/index.dto';
 import { RabbitMQService } from 'src/utils/rabbit.utils';
+import { EventTypes } from 'src/typings/events';
+import { ServiceRequested } from 'src/_schemas/artisans._schema';
 
 @Injectable()
 export class ClientService {
@@ -35,7 +38,7 @@ export class ClientService {
     @InjectRepository(ServiceFeedback)
     private readonly serviceReqFeedbackRepository: Repository<ServiceFeedback>,
 
-    private readonly rabbitMQ: RabbitMQService,
+    private readonly rabbitService: RabbitMQService,
   ) {}
 
   async createServiceRequest(payload: CreateServiceRequestDto, user: Users) {
@@ -73,13 +76,21 @@ export class ClientService {
       business_id: payload.artisan_id,
     });
 
-    await this.serviceReqRepository.save(serviceRequest);
+    const savedServiceReq = await this.serviceReqRepository.save(
+      serviceRequest,
+    );
 
     // Emit service requested event to -> business via websocket and save to activity_logs
-    this.rabbitMQ.publish(
-      { name: 'Oluwatunmise' },
-      'notification.service_request',
+
+    this.rabbitService.publish(
+      {
+        sourceId: user.uuid,
+        targetId: artisanExists.uuid,
+        payload: new ServiceRequested(savedServiceReq),
+      },
+      EventTypes.EVENT_SERVICE_REQUEST_A,
     );
+
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Service request sent successfully',

@@ -15,7 +15,7 @@ services:
       - 5432:5432
 
   rabbitMQ_server:
-    image: 'rabbitmq:3-management'
+    image: rabbitmq:3-management-alpine
     container_name: 'Artisans_rabbitMQ'
     environment:
       - RABBITMQ_DEFAULT_USER=artisans
@@ -24,8 +24,9 @@ services:
     volumes:
       - rabbitMQ_vol:/var/lib/rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - '5672:5672'
+      - '15672:15672'
+      - '15692:15692'
 
   # zipkin: # (TODO)
   #   image: openzipkin/zipkin

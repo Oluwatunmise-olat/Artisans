@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { Queues } from 'src/typings/events';
+import { EventPayload, EventTypes, Queues } from 'src/typings/events';
 import { RabbitMQManager } from './transport/rabbitmq-manager';
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -39,7 +39,7 @@ export class RabbitMQService {
     await this.rabbitClient.disconnect();
   }
 
-  public publish(message: any, routingKey: string) {
+  public publish(message: EventPayload, routingKey: EventTypes) {
     return this.rabbitClient.publish(message, routingKey);
   }
 
